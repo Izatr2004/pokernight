@@ -30,3 +30,14 @@ nav .navbar-brand .green
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.myPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(242, 237, 237);
+    border: 1px solid black;
+    padding: 20px;
+    z-index: 1;
+}

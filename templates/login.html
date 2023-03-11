@@ -5,6 +5,16 @@
 {% endblock %}
 
 {% block main %}
+    <div id="myPopup" class="myPopup" style="display: none;">
+        Username is blank !
+    </div>
+    <div id="myPopup2" class="myPopup" style="display: none;">
+        Password is blank !
+    </div>
+    <div id="myPopup3" class="myPopup" style="display: none;">
+        Username/Password doesn't exist !
+    </div>
+
     <form action="/login" method="post">
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
@@ -14,4 +24,35 @@
         </div>
         <button class="btn btn-primary" type="submit">Log In</button>
     </form>
+
+    <script>
+        {% if err1 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err2 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup2");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err3 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup3");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% endif %}
+        </script>
 {% endblock %}

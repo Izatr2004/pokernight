@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Players
+{% endblock %}
+
+{% block main %}
+    {% for player in players %}
+        <tr>
+            <td class="text-start">{{ player["name"] }}</td>
+            <td class="text-end">{{ player["hp"] }}</td>
+            <td class="text-end"> {{ player["bounty"] }} </td>
+            <button class="btn btn-primary" onClick="placeBounty({{ player["id"] }})">Place Bounty</button>
+        </tr>
+    {% endfor %}
+{% endblock %}
