@@ -5,6 +5,25 @@
 {% endblock %}
 
 {% block main %}
+    <div id="myPopup" class="myPopup" style="display: none;">
+        Username is blank !
+    </div>
+    <div id="myPopup2" class="myPopup" style="display: none;">
+        Password/Confirmation is blank !
+    </div>
+    <div id="myPopup3" class="myPopup" style="display: none;">
+        Passwords dont match !
+    </div>
+    <div id="myPopup4" class="myPopup" style="display: none;">
+        Username already exists !
+    </div>
+    <div id="myPopup5" class="myPopup" style="display: none;">
+        Username has to be more than 3 characters long !
+    </div>
+    <div id="myPopup6" class="myPopup" style="display: none;">
+        Password isn't in the right format !
+    </div>
+
     <form action="/register" method="post">
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
@@ -17,4 +36,64 @@
         </div>
         <button class="btn btn-primary" type="submit">Register</button>
     </form>
+
+    <script>
+        {% if err1 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err2 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup2");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err3 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup3");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err4 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup4");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err5 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup5");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% elif err6 == True %}
+            // Get the popup element and display it
+            var popup = document.getElementById("myPopup6");
+            popup.style.display = "block";
+        
+            // Set a timeout function to close the popup after 4 seconds
+            setTimeout(function() {
+                popup.style.display = "none";
+            }, 4000);
+        {% endif %}
+        </script>
 {% endblock %}
+
+

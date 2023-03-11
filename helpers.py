@@ -16,3 +16,5 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def has_int_and_upper(string):
+    return any(char.isdigit() for char in string) and any(char.isupper() for char in string)

@@ -6,7 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from helpers import login_required
+from helpers import login_required, has_int_and_upper
 
 # Configure application
 app = Flask(__name__)
@@ -44,20 +44,23 @@ def login():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        # # Ensure username was submitted
-        # if not request.form.get("username"):
-        #     return apology("must provide username", 403)
-
-        # # Ensure password was submitted
-        # elif not request.form.get("password"):
-        #     return apology("must provide password", 403)
+        name = request.form.get("username")
+        passw = request.form.get("password")
+    
+        # Ensure username was submitted
+        if not name:
+            return render_template("login.html", err1=True)
+        
+        # Ensure password was submitted
+        if not passw:
+            return render_template("login.html", err2=True)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE name = ?", request.form.get("username"))
+        rows = db.execute("SELECT * FROM users WHERE name = ?", name)
 
-        # # Ensure username exists and password is correct
-        # if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-        #     return apology("invalid username and/or password", 403)
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], passw):
+            return render_template("login.html", err3=True)
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -79,7 +82,7 @@ def login():
 def logout():
     """Log user out"""
 
-    # Forget any user_id
+    # Forget all session variables
     session.clear()
 
     # Redirect user to login form
@@ -92,25 +95,37 @@ def register():
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        # # Ensure username was submitted
-        # if not request.form.get("username"):
-        #     return apology("must provide username", 400)
+        name = request.form.get("username")
+        passw = request.form.get("password")
+        conf = request.form.get("confirmation")
+    
+        # Ensure username was submitted
+        if not name:
+            return render_template("register.html", err1=True)
 
-        # # Ensure password was submitted
-        # elif not request.form.get("password"):
-        #     return apology("must provide password", 400)
+        # Ensure password was submitted
+        elif not passw or not conf:
+            return render_template("register.html", err2=True)
 
-        # # Ensure passwords match
-        # elif request.form.get("password") != request.form.get("confirmation"):
-        #     return apology("passwords don't match", 400)
+        # Ensure passwords match
+        elif passw != conf:
+            return render_template("register.html", err3=True)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE name = ?", request.form.get("name"))
+        rows = db.execute("SELECT * FROM users WHERE name = ?", name)
 
-        # # Ensure username doesn't exist
-        # if len(rows) != 0:
-        #     return apology("username already exists", 400)
+        # Ensure username doesn't exist
+        if len(rows) != 0:
+            return render_template("register.html", err4=True)
 
+        # Ensure username is at least 3 characters long
+        if len(name) < 4:
+            return render_template("register.html", err5=True)
+        
+        # Ensure password format is right
+        if len(passw) < 6 or not has_int_and_upper(passw):
+            return render_template("register.html", err6=True)
+            
         # Insert username and password information into sql database
         db.execute("INSERT INTO users (name, hash) VALUES(?, ?)", request.form.get("username"), generate_password_hash(request.form.get("password")))
 
@@ -119,7 +134,12 @@ def register():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
-        session["hp"] = 0
+        session["hp"] = rows[0]["hp"]
+
+        session["playing"] = 0
+        session["dealer"] = 0
+        session["admin"] = 0
+        session["dealers"] = [4, 5, 6, 7, 8, 9]
 
         # Redirect user to home page
         return redirect("/")
@@ -142,20 +162,45 @@ def dealers():
         #initialize rows with user data
         rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
 
-        # unimplemented error checking
-        # if rows[0]["hp"] < 1:
-        #     return jsonify({'success': False})
+        # making sure user has enough hp
+        if rows[0]["hp"] < 1:
+            return jsonify({'success': False})
         
-
         # minus users hp and add dealers hp
-        db.execute("UPDATE users SET hp = hp - 1 WHERE id = ?", session["user_id"])
+        db.execute("UPDATE users SET hp = hp - 1, lucky = lucky + 1 WHERE id = ?", session["user_id"])
         db.execute("UPDATE users SET hp = hp + 1 WHERE id = ?", id)
 
         session["hp"] = rows[0]["hp"]
 
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'hp': session["hp"]})
     else:
         return render_template("dealers.html")
+
+@app.route("/players", methods=["GET", "POST"])
+@login_required
+def players():
+    if request.method == "POST":
+        id = int(request.form['user_id'])
+
+        #initialize rows with user data
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+
+        # making sure user has enough hp
+        if rows[0]["hp"] < 10:
+            return jsonify({'success': False})
+        
+        # minus users hp and add dealers hp
+        db.execute("UPDATE users SET hp = hp - 10, lucky = lucky + 10 WHERE id = ?", session["user_id"])
+        db.execute("UPDATE users SET bounty = bounty + 1 WHERE id = ?", id)
+
+        session["hp"] = rows[0]["hp"]
+
+        return jsonify({'success': True, 'hp': session["hp"]})
+    else:
+        players = db.execute("SELECT * FROM users ORDER BY hp")
+        # add OFFSET int for skipping first few users^
+        
+        return render_template("players.html", players=players)
 
 @app.route("/leaderboard")
 @login_required
