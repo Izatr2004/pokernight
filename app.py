@@ -18,7 +18,6 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///data.db")
-x = 20
 
 # app.secret_key = "27eduCBA09"
 
