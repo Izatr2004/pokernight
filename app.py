@@ -1,7 +1,7 @@
 import os
 
 from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -18,7 +18,6 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///data.db")
-x = 25
 
 # app.secret_key = "27eduCBA09"
 
@@ -138,23 +137,23 @@ def rules():
 @login_required
 def dealers():
     if request.method == "POST":
-        tip = int(request.form.get("tip"))
-        id = int(request.form.get("id"))
+        id = int(request.form['user_id'])
 
         #initialize rows with user data
         rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
 
         # unimplemented error checking
-        # if rows[0]["hp"] < tip:
-        #     return apology("not enough hp balance", 400)
+        # if rows[0]["hp"] < 1:
+        #     return jsonify({'success': False})
+        
 
         # minus users hp and add dealers hp
-        db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", tip, session["user_id"])
-        db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", tip, id)
+        db.execute("UPDATE users SET hp = hp - 1 WHERE id = ?", session["user_id"])
+        db.execute("UPDATE users SET hp = hp + 1 WHERE id = ?", id)
 
         session["hp"] = rows[0]["hp"]
 
-        return redirect("/dealers")
+        return jsonify({'success': True})
     else:
         return render_template("dealers.html")
 

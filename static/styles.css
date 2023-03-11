@@ -21,3 +21,12 @@ nav .navbar-brand .green
 {
     color: #2e944b;
 }
+
+.ui-dialog {
+    font-size: small;
+    background-color: beige;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
