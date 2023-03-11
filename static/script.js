@@ -48,3 +48,8 @@ function updateMoney(user_id) {
         }
     });
 }
+
+// function updateFooter() {
+//     var hpValue = document.getElementById("value-container");
+//     hpValue.innerHTML = "HP: " + (parseInt(sessionStorage.getItem("hp")));
+// }
