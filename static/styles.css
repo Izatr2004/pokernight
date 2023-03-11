@@ -41,3 +41,15 @@ nav .navbar-brand .green
     padding: 20px;
     z-index: 1;
 }
+
+.login-border-box {
+    box-sizing: border-box;
+    position: absolute;
+    width: 306px;
+    height: 231px;
+    left: 42px;
+    top: 306px;
+    background: #c9d6df;
+    border: 1px solid #000000;
+    border-radius: 20px;
+}

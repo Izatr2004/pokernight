@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block main %}
+    <div id="dialog-message"></div>
     {% for player in players %}
-        <tr>
+        <tr class="">
             <td class="text-start">{{ player["name"] }}</td>
             <td class="text-end">{{ player["hp"] }}</td>
             <td class="text-end"> {{ player["bounty"] }} </td>

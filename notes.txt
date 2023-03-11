@@ -48,3 +48,17 @@ table number status
         <button id="myBtn">Click me</button>
 
     <div>
+
+function updateHP(amount) {
+    $.ajax({
+        url: "/update-hp",
+        type: "POST",
+        data: {amount: amount},
+        success: function(response) {
+            $('#value-container').html("HP: " + response.new_hp);
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
