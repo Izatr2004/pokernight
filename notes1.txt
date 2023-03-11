@@ -1,0 +1,14 @@
+to implement:
+    javascript for balance checking if hp is enough for tipping, as well as if login/register works
+    finish up tipping page whose mechanics will work on table view as well.
+    bounty system implementation (similar to tipping)
+    lucky draw variables? with this we can also implement the lucky draw page with statistics
+    leaderboard live update using javascript
+    static view of pages for users who dont login
+    table system implementation:
+        a dealer can "checkin" to a table and claim the spot as well as have the ability to checkout
+        players can checkin to a table as well and only leave once their chips are gone
+        dealer view has convert button which converts players hp and bounty to another winning player
+        table system changes convert button after the first round
+        superadmin can access and kick dealers out or even users as well as change their values
+
