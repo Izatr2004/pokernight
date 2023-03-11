@@ -1,0 +1,50 @@
+CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username TEXT NOT NULL, hash TEXT NOT NULL, cash NUMERIC NOT NULL DEFAULT 10000.00);
+CREATE TABLE sqlite_sequence(name,seq);
+CREATE UNIQUE INDEX username ON users (username);
+CREATE TABLE ownedStocks (owner_id INTEGER NOT NULL, symbol TEXT NOT NULL, numOwned INTEGER NOT NULL, FOREIGN KEY(owner_id) REFERENCES users(id));
+CREATE TABLE transactions (transaction_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, symbol TEXT NOT NULL, shares INTEGER NOT NULL, timestamp DATETIME NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id));
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  hash TEXT NOT NULL,
+  email TEXT,
+  hp INTEGER,
+  bounty INTEGER,
+  lucky INTEGER
+  playing BIT DEFAULT 0,
+  permission INTEGER DEFAULT 0 NOT NULL
+);
+
+CREATE TABLE userStats(id INTEGER NOT NULL, hp INTEGER, bounty INTEGER, playing BIT, permission INTEGER NOT NULL, FOREIGN KEY(id) REFERENCES users(id))
+
+Sessions:
+user_id
+playing
+dealing
+admin?
+
+<ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/quote">Quote</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/buy">Buy</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/sell">Sell</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/topup">suckmydick</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
+
+
+possible more sql data to add:
+table number status
+
+<button class="btn btn-primary" type="submit">Tip</button>
+<form class="d-flex" onsubmit="return showAlert(event)">
+<button class="btn btn-primary" onclick="showPopup()">Tip</button>
+
+</div>
+        <input name="tip" type="hidden" value="1">
+        <button id="myBtn">Click me</button>
+
+    <div>
