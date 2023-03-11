@@ -14,3 +14,5 @@ to consider:
     bounty system implementation (similar to tipping), do we want the player stats to 
     change everytime someone tips or places a bounty?
 
+BUGS:
+1. when you switch from tip view to bounty view, the first click gets fucked update

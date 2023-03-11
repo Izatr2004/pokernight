@@ -17,7 +17,11 @@ function tip(user_id) {
                 setTimeout(function() {
                     $("#dialog-message").dialog("close");
                 }, 4000); // close dialog after 5 seconds
-                $('#value-container').html("HP: " + data.hp);
+
+                // update HP value in #value-container element
+                if (data.hp !== undefined) {
+                    $('#value-container').text("HP: " + data.hp);
+                }
             } else {
                 $("#dialog-message").dialog({
                     modal: true,
@@ -50,20 +54,6 @@ function tip(user_id) {
     });
 }
 
-function updateHP(amount) {
-    $.ajax({
-        url: "/update-hp",
-        type: "POST",
-        data: {amount: amount},
-        success: function(response) {
-            $('#value-container').html("HP: " + response.new_hp);
-        },
-        error: function(error) {
-            console.log(error);
-        }
-    });
-}
-
 function placeBounty(user_id) {
     $.ajax({
         type: 'POST',
@@ -82,7 +72,7 @@ function placeBounty(user_id) {
                 $("#dialog-message").text("You have successfully placed a bounty!");
                 setTimeout(function() {
                     $("#dialog-message").dialog("close");
-                }, 4000); // close dialog after 5 seconds
+                }, 4000); // close dialog after 5 seconds 
                 $('#value-container').html("HP: " + data.hp);
             } else {
                 $("#dialog-message").dialog({

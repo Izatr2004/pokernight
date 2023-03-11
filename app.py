@@ -171,8 +171,9 @@ def dealers():
         db.execute("UPDATE users SET hp = hp + 1 WHERE id = ?", id)
 
         session["hp"] = rows[0]["hp"]
+        hp = session["hp"]
 
-        return jsonify({'success': True, 'hp': session["hp"]})
+        return jsonify({'success': True, 'hp': hp})
     else:
         return render_template("dealers.html")
 
@@ -194,8 +195,9 @@ def players():
         db.execute("UPDATE users SET bounty = bounty + 1 WHERE id = ?", id)
 
         session["hp"] = rows[0]["hp"]
+        hp = session["hp"]
 
-        return jsonify({'success': True, 'hp': session["hp"]})
+        return jsonify({'success': True, 'hp': hp})
     else:
         players = db.execute("SELECT * FROM users ORDER BY hp")
         # add OFFSET int for skipping first few users^
