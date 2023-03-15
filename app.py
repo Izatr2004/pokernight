@@ -253,3 +253,6 @@ def table7():
 @login_required
 def table8():
     return render_template("table8.html")
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
