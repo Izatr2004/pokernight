@@ -24,18 +24,23 @@
         Password isn't in the right format !
     </div>
 
+    <div class = "register-border-box d-flex justify-content-center">
     <form action="/register" method="post">
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="Username" type="text">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto login" id="username" name="username" placeholder="Username" type="text">
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+            <input class="form-control mx-auto w-auto login" id="password" name="password" placeholder="Password" type="password">
         </div>
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="password" name="confirmation" placeholder="Confirm Password" type="password">
+            <input class="form-control mx-auto w-auto login" id="password" name="confirmation" placeholder="Confirm Password" type="password">
         </div>
-        <button class="btn btn-primary" type="submit">Register</button>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto login" id="email" name="email" placeholder="Enter Email" type="text">
+        </div>
+        <button class="btn btn-primary btn-updated" type="submit">Register</button>
     </form>
+    </div>
 
     <script>
         {% if err1 == True %}

@@ -56,7 +56,7 @@ def admin():
             db.execute("UPDATE users SET playing = 0 WHERE id = ?", id)   
             
         if idplay:
-            db.execute("UPDATE users SET playing = 1 WHERE id = ?", idplay)   
+            db.execute("UPDATE users SET playing = 1 hp = hp + 10 WHERE id = ?", idplay)   
         
         persons = db.execute("SELECT * FROM users")
         
@@ -138,6 +138,7 @@ def register():
         name = request.form.get("username")
         passw = request.form.get("password")
         conf = request.form.get("confirmation")
+        email = request.form.get("email")
     
         # Ensure username was submitted
         if not name:
@@ -169,6 +170,9 @@ def register():
         # Insert username and password information into sql database
         db.execute("INSERT INTO users (name, hash) VALUES(?, ?)", request.form.get("username"), generate_password_hash(request.form.get("password")))
 
+        if email:
+            db.execute("UPDATE users SET email = ? WHERE name = ?", email, name)
+        
         # Update rows by querying after insertion
         rows = db.execute("SELECT * FROM users WHERE name = ?", request.form.get("username"))
 
@@ -251,7 +255,9 @@ def players():
 @app.route("/leaderboard")
 @login_required
 def leaderboard():
-    return render_template("leaderboard.html")
+    players = db.execute("SELECT * FROM users ORDER BY bounty ")
+        # add OFFSET int for skipping first few users^
+    return render_template("leaderboard.html", players=players)
 
 @app.route("/tables", methods=["GET", "POST"])
 @login_required
