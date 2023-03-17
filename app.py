@@ -34,6 +34,39 @@ def after_request(response):
 def home():
     return render_template("home.html")
 
+@app.route("/admin", methods=["GET", "POST"])
+@login_required 
+def admin():
+    
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+        bounty = request.form.get("bounty")
+        hp = request.form.get("hp")
+        updateid = request.form.get("updateid")
+        id = request.form.get("id")
+        idplay = request.form.get("idplay")
+        
+        if bounty:
+            db.execute("UPDATE users SET bounty = ? WHERE id = ?", bounty, updateid)
+            
+        if hp:
+            db.execute("UPDATE users SET hp = ? WHERE id = ?", hp, updateid)
+        
+        if id:
+            db.execute("UPDATE users SET playing = 0 WHERE id = ?", id)   
+            
+        if idplay:
+            db.execute("UPDATE users SET playing = 1 WHERE id = ?", idplay)   
+        
+        persons = db.execute("SELECT * FROM users")
+        
+        return render_template("admin.html", persons=persons)
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        persons = db.execute("SELECT * FROM users")
+        
+        return render_template("admin.html", persons=persons)
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
@@ -66,11 +99,18 @@ def login():
         session["user_id"] = rows[0]["id"]
         session["hp"] = rows[0]["hp"]
 
-        session["playing"] = 0
-        session["dealer"] = 0
-        session["admin"] = 0
-        session["dealers"] = [3, 4, 5, 6, 7, 8, 9]
-
+        session["playing"] = rows[0]["playing"]
+        session["dealer"] = rows[0]["dealing"]
+        session["admin"] = rows[0]["permission"]
+        session["dealers"] = [4, 5, 6, 7, 8, 9, 10]
+        
+        # consider putting this into another route to make process faster so regulars dont need this code?
+        tablerow = db.execute("SELECT * FROM tables")
+        for i in range(len(tablerow)):
+            if tablerow[i]["dealerid"] > 1:
+                session["occupied" + str(i + 1)] = True
+            session["dealerid" + str(i + 1)] = tablerow[i]["dealerid"]
+                
         # Redirect user to home page
         return redirect("/")
 
@@ -122,9 +162,9 @@ def register():
         if len(name) < 4:
             return render_template("register.html", err5=True)
         
-        # Ensure password format is right
-        if len(passw) < 6 or not has_int_and_upper(passw):
-            return render_template("register.html", err6=True)
+        # # Ensure password format is right
+        # if len(passw) < 6 or not has_int_and_upper(passw):
+        #     return render_template("register.html", err6=True)
             
         # Insert username and password information into sql database
         db.execute("INSERT INTO users (name, hash) VALUES(?, ?)", request.form.get("username"), generate_password_hash(request.form.get("password")))
@@ -136,10 +176,10 @@ def register():
         session["user_id"] = rows[0]["id"]
         session["hp"] = rows[0]["hp"]
 
-        session["playing"] = 0
-        session["dealer"] = 0
-        session["admin"] = 0
-        session["dealers"] = [4, 5, 6, 7, 8, 9]
+        session["playing"] = rows[0]["playing"]
+        session["dealer"] = rows[0]["dealing"]
+        session["admin"] = rows[0]["permission"]
+        session["dealers"] = [4, 5, 6, 7, 8, 9, 10]
 
         # Redirect user to home page
         return redirect("/")
@@ -170,6 +210,8 @@ def dealers():
         db.execute("UPDATE users SET hp = hp - 1, lucky = lucky + 1 WHERE id = ?", session["user_id"])
         db.execute("UPDATE users SET hp = hp + 1 WHERE id = ?", id)
 
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        
         session["hp"] = rows[0]["hp"]
         hp = session["hp"]
 
@@ -194,6 +236,8 @@ def players():
         db.execute("UPDATE users SET hp = hp - 10, lucky = lucky + 10 WHERE id = ?", session["user_id"])
         db.execute("UPDATE users SET bounty = bounty + 1 WHERE id = ?", id)
 
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+
         session["hp"] = rows[0]["hp"]
         hp = session["hp"]
 
@@ -212,47 +256,311 @@ def leaderboard():
 @app.route("/tables", methods=["GET", "POST"])
 @login_required
 def tables():
-    return render_template("tables.html")
+    if request.method == "POST":
+        tableid = int(request.form.get("tableid"))
+        if tableid == 1:
+            return redirect("/table1")
+        if tableid == 2:
+            return redirect("/table2")
+        if tableid == 3:
+            return redirect("/table3")
+        if tableid == 4:
+            return redirect("/table4")
+        if tableid == 5:
+            return redirect("/table5")
+        if tableid == 6:
+            return redirect("/table6")
+        if tableid == 7:
+            return redirect("/table7")
+        
+        return redirect("/tables")
+    else:
+        tables = db.execute("SELECT * FROM tables")
+        return render_template("tables.html", tables=tables)
+
+@app.route("/myTable", methods=["GET"])
+@login_required
+def mytable():
+    if session["dealerid1"] == session["user_id"]:
+        return redirect("/table1")
+    if session["dealerid2"] == session["user_id"]:
+        return redirect("/table2")
+    if session["dealerid3"] == session["user_id"]:
+        return redirect("/table3")
+    if session["dealerid4"] == session["user_id"]:
+        return redirect("/table4")
+    if session["dealerid5"] == session["user_id"]:
+        return redirect("/table5")
+    if session["dealerid6"] == session["user_id"]:
+        return redirect("/table6")
+    if session["dealerid7"] == session["user_id"]:
+        return redirect("/table7")
+    
+    return redirect("/tables")
+    
+@app.route("/addplayer", methods=["POST"])
+@login_required
+def addplayer():
+    id = request.form.get("addid")
+    tableid = request.form.get("tableid")
+    db.execute("UPDATE users SET poker = ? WHERE id = ?", tableid, id)
+    db.execute("UPDATE users SET tableid = ? WHERE id = ?", tableid, id)
+    return redirect("/myTable")
 
 @app.route("/table1", methods=["GET", "POST"])
 @login_required
 def table1():
-    return render_template("table1.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 1", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 1")
+            session["occupied1"] = True
+            session["dealerid1"] = row[0]["dealerid"]
+
+        players = db.execute("SELECT * FROM users WHERE poker = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+        # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table1.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 1")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied1"] = True
+        session["dealerid1"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table1.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table2", methods=["GET", "POST"])
 @login_required
 def table2():
-    return render_template("table2.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        # keep in mind the int is because request.form.get returns a string, which messes up the comparison in jinja
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 2", dealer)
+            session["occupied2"] = True
+            session["dealerid2"] = dealer
+        
+        players = db.execute("SELECT * FROM users WHERE poker = 2")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+         # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table2.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 2")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied2"] = True
+        session["dealerid2"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 2")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table2.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table3", methods=["GET", "POST"])
 @login_required
 def table3():
-    return render_template("table3.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        # keep in mind the int is because request.form.get returns a string, which messes up the comparison in jinja
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 3", dealer)
+            session["occupied3"] = True
+            session["dealerid3"] = dealer
+        
+        players = db.execute("SELECT * FROM users WHERE poker = 3")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+         # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table3.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 3")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied3"] = True
+        session["dealerid3"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 3")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table3.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table4", methods=["GET", "POST"])
 @login_required
 def table4():
-    return render_template("table4.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        # keep in mind the int is because request.form.get returns a string, which messes up the comparison in jinja
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 4", dealer)
+            session["occupied4"] = True
+            session["dealerid4"] = dealer
+        
+        players = db.execute("SELECT * FROM users WHERE poker = 4")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+         # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table4.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 4")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied4"] = True
+        session["dealerid4"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 4")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table4.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table5", methods=["GET", "POST"])
 @login_required
 def table5():
-    return render_template("table5.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        # keep in mind the int is because request.form.get returns a string, which messes up the comparison in jinja
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 5", dealer)
+            session["occupied5"] = True
+            session["dealerid5"] = dealer
+    
+        players = db.execute("SELECT * FROM users WHERE poker = 5")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+         # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table5.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 5")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied5"] = True
+        session["dealerid5"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 5")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table5.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table6", methods=["GET", "POST"])
 @login_required
 def table6():
-    return render_template("table6.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        # keep in mind the int is because request.form.get returns a string, which messes up the comparison in jinja
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 6", dealer)
+            session["occupied6"] = True
+            session["dealerid6"] = dealer
+        
+        players = db.execute("SELECT * FROM users WHERE poker = 6")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+         # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table6.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 6")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied6"] = True
+        session["dealerid6"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 6")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table6.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table7", methods=["GET", "POST"])
 @login_required
 def table7():
-    return render_template("table7.html")
+    if request.method == "POST":
+        # this part deals with checking in the dealer
+        # keep in mind the int is because request.form.get returns a string, which messes up the comparison in jinja
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 7", dealer)
+            session["occupied7"] = True
+            session["dealerid7"] = dealer
+        
+        players = db.execute("SELECT * FROM users WHERE poker = 7")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        
+         # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("table7.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 7")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied7"] = True
+        session["dealerid7"] = dealer
+        players = db.execute("SELECT * FROM users WHERE poker = 7")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        return render_template("table7.html", dealer=dealer, players=players, persons=persons)
 
-@app.route("/table8", methods=["GET", "POST"])
+@app.route("/eliminate", methods=["POST"])
 @login_required
-def table8():
-    return render_template("table8.html")
+def eliminate():
+    eliminated = request.form.get("eliminated")
+    eliminator = request.form.getlist("eliminators[]")
+    
+    if len(eliminator) == 0:
+        db.execute("UPDATE users SET poker = 0 WHERE id = ?", eliminated)
+        return redirect("myTable")
+    
+    # make sure eliminator and eliminated isnt the same person
+    if eliminated in eliminator:
+        return redirect("myTable")
+    
+    rows = db.execute("SELECT * FROM users WHERE id = ?", eliminated)
+    bounty = rows[0]["bounty"]
+    
+    if len(eliminator) > 1:
+        eliminators = len(eliminator)
+        bounty = bounty // eliminators
+        for i in range(eliminators):
+            db.execute("UPDATE users SET bounty = bounty + ? WHERE id = ?", bounty, eliminator[i])
+        db.execute("UPDATE users SET bounty = 0, playing = 0, poker = 0 WHERE id = ?", eliminated)
+        return redirect("myTable")
+    
+    db.execute("UPDATE users SET bounty = bounty + ? WHERE id = ?", bounty, eliminator[0])
+    db.execute("UPDATE users SET bounty = 0, playing = 0, poker = 0  WHERE id = ?", eliminated)
+    
+    return redirect("/myTable")
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+@app.route("/checkout", methods=["POST"])
+@login_required 
+def checkout():
+    id = request.form.get("checkoutid")
+    tableid = db.execute("SELECT * FROM tables WHERE dealerid = ?", id)
+    db.execute("UPDATE tables SET dealerid = 0 WHERE dealerid = ?", id)
+    db.execute("UPDATE users SET poker = 0 WHERE tableid = ?", tableid[0]["id"])
+    session["dealerid" + str(tableid[0]["id"])] = None
+    session["occupied" + str(tableid[0]["id"])] = False
+    return redirect("/myTable")

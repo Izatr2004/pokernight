@@ -6,4 +6,13 @@
 
 {% block main %}
     This displays the tables to view (with dealer names) and current number of players within a table
+    {% for table in tables %}
+        <tr class="">
+            <form action="/tables" method="post">
+                <td class="text-start">Table {{ table["id"] }}</td>
+                <input name="tableid" type="hidden" value="{{ table["id"] }}">
+                <button class="btn btn-primary" type="submit">Enter</button>
+              </form>
+        </tr>
+    {% endfor %}
 {% endblock %}
