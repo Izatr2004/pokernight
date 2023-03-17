@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Eliminate
+{% endblock %}
+
+{% block main %}
+    <div>
+        <h1> Choose Eliminator
+        <form id="eliminationForm" action="/eliminate" method="post">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>HP</th>
+                        <th>Bounty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for player in players %}
+                    <tr class="">
+                        <td class="text-start">{{ player["name"] }}</td>
+                        <td class="text-start">{{ player["hp"] }}</td>
+                        <td class="text-start">{{ player["bounty"] }}</td>
+                        <td>    
+                                <input name="eliminators[]" type="checkbox" value="{{ player["id"] }}">
+                                <input name="eliminated" type="hidden" value="{{ eliminated }}">
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="buttons">Eliminate</button>
+        </form>
+    </div>
+{% endblock %}
