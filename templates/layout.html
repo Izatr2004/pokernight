@@ -3,7 +3,7 @@
 <html lang="en">
 
     <head>
-
+        
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, width=device-width">
 
@@ -22,28 +22,42 @@
     </head>
 
     <body>
-
-        <nav class="bg-light border navbar navbar-expand-md navbar-light">
+        
+        <nav class="bg-light navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/"><span class="blue">P</span><span class="red">O</span><span class="yellow">K</span><span class="green">E</span><span class="red">R</span></a>
+                <a class="navbar-brand" href="/"><img class="img-fluid jokerimg" src="/static/poker-cards.png"></a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbar">
-                    {% if session["dealing"] == 1 %}
-                        <ul class="navbar-nav me-auto mt-2">
+                    {% if session["admin"] == 1 %}
+                        <ul class="navbar-nav me-auto mt-2 text-center navfont">
                             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
                             <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
                             <li class="nav-item"><a class="nav-link" href="/leaderboard">Leaderboards</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/myTable">My Table</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/tables">Tables</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin">Admin View</a></li>
                         </ul>
-                        <ul class="navbar-nav ms-auto mt-2">
+                        <ul class="navbar-nav ms-auto mt-2 text-center">
                             <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
                         </ul>
-
+                    
+                    {% elif session["dealer"] == 1 %}
+                    <ul class="navbar-nav me-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/leaderboard">Leaderboards</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/tables">Tables</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/myTable">My Table</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
                     {% elif session["playing"] == 1 %}
                         <ul class="navbar-nav me-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
@@ -51,18 +65,19 @@
                             <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
                             <li class="nav-item"><a class="nav-link" href="/leaderboard">Leaderboards</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/myTable">My Table</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/tables">Tables</a></li>
                         </ul>
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
                         </ul>
                     {% elif session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item "><a class="nav-link" href="/">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
                             <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
                             <li class="nav-item"><a class="nav-link" href="/leaderboard">Leaderboards</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/tables">Tables</a></li>
                         </ul>
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>

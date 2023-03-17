@@ -105,3 +105,4 @@ function placeBounty(user_id) {
         }
     });
 }
+
