@@ -6,12 +6,30 @@
 
 {% block main %}
     <div id="dialog-message"></div>
+    <div class="table-borderless table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>HP</th>
+                <th>Bounty</th>
+                <th>Place Bounties &#40;10 hp&#41;</th>
+            </tr>
+        </thead>
+        <tbody>
     {% for player in players %}
         <tr class="">
             <td class="text-start">{{ player["name"] }}</td>
             <td class="text-end">{{ player["hp"] }}</td>
             <td class="text-end"> {{ player["bounty"] }} </td>
-            <button class="btn btn-primary" onClick="placeBounty({{ player["id"] }})">Place Bounty</button>
+            <td><button class="btn btn-primary btn-updated" onClick="placeBounty({{ player["id"] }})">Place Bounty</button></td>
         </tr>
     {% endfor %}
+    </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <div id="value-container"> HP: {{ session["hp"] }} </div>
 {% endblock %}

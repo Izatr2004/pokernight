@@ -5,33 +5,45 @@
 {% endblock %}
 
 {% block main %}
-
-    This Shows Photos of the Dealers as well as an option to tip (for lucky draw points lol)
     <div id="dialog-message" title="Tip Status"></div>
+    <div class="header">Tip Dealers</div>
+    <div class="row">
+        <div class="col-md-6">Zerrin</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(4)">Tip</button></div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">Stella</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(5)">Tip</button></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">Ashley</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(6)">Tip</button></div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">Nina</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(7)">Tip</button></div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">Grace</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(8)">Tip</button></div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">Kate</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(9)">Tip</button></div>
+    </div>
 
-    <div>
-        Zerrin
+    <div class="row">
+        <div class="col-md-6">Nicholas</div>
+        <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(10)">Tip</button></div>
     </div>
-    <button class="btn btn-primary" onClick="tip(4)">Tip</button>
-    <div>
-        Stella
-    </div>
-    <button class="btn btn-primary" onClick="tip(5)">Tip</button>
-    <div>
-        Ashley
-    </div>
-    <button class="btn btn-primary" onClick="tip(6)">Tip</button>
-    <div>
-        Nina
-    </div>
-    <button class="btn btn-primary" onClick="tip(7)">Tip</button>
-    <div>
-        Kate
-    </div>
-    <button class="btn btn-primary" onClick="tip(8)">Tip</button>
-    <div>
-        Nicholas
-    </div>
-    <button class="btn btn-primary" onClick="tip(9)">Tip</button>
+    
 
+{% endblock %}
+
+{% block footer %}
+    <div id="value-container"> HP: {{ session["hp"] }} </div>
 {% endblock %}

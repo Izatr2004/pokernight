@@ -5,5 +5,14 @@
 {% endblock %}
 
 {% block main %}
-    This page displays the live leaderboard which updates all the players bounties and hp? and playing status in a certain repeated timeframe
+    {% for player in players %}
+    <tr class="">
+        <td class="text-start">{{ player["name"] }}</td>
+        <td class="text-end"> {{ player["bounty"] }} </td>
+    </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block footer %}
+    <div id="value-container"> HP: {{ session["hp"] }} </div>
 {% endblock %}
