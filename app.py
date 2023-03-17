@@ -30,6 +30,10 @@ def after_request(response):
     return response
 
 @app.route("/")
+def start():
+    return render_template("start.html")
+
+@app.route("/home")
 @login_required
 def home():
     return render_template("home.html")
@@ -56,7 +60,7 @@ def admin():
             db.execute("UPDATE users SET playing = 0 WHERE id = ?", id)   
             
         if idplay:
-            db.execute("UPDATE users SET playing = 1 hp = hp + 10 WHERE id = ?", idplay)   
+            db.execute("UPDATE users SET playing = 1, hp = hp + 10 WHERE id = ?", idplay)   
         
         persons = db.execute("SELECT * FROM users")
         
@@ -112,7 +116,7 @@ def login():
             session["dealerid" + str(i + 1)] = tablerow[i]["dealerid"]
                 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/home")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -186,7 +190,7 @@ def register():
         session["dealers"] = [4, 5, 6, 7, 8, 9, 10]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/home")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -258,6 +262,12 @@ def leaderboard():
     players = db.execute("SELECT * FROM users ORDER BY bounty ")
         # add OFFSET int for skipping first few users^
     return render_template("leaderboard.html", players=players)
+
+@app.route("/lottery")
+@login_required
+def lottery():
+    persons = db.execute("SELECT * FROM users")
+    
 
 @app.route("/tables", methods=["GET", "POST"])
 @login_required

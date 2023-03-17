@@ -40,10 +40,8 @@
         <div class="col-md-6">Nicholas</div>
         <div class="col-md-6 text-end"><button class="btn btn-primary btn-updated" onClick="tip(10)">Tip</button></div>
     </div>
-    
-
 {% endblock %}
 
 {% block footer %}
-    <div id="value-container"> HP: {{ session["hp"] }} </div>
+    <div id="value-container"><img class="img-fluid money" src="/static/money.png"> {{ session["hp"] }} </div>
 {% endblock %}
