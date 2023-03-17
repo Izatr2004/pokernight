@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin
+{% endblock %}
+
+{% block main %}
+    {% if session["admin"] == 1 %}
+    <div id="dialog-message"></div>
+    <h1>Admin Access</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>HP</th>
+                <th>Bounty</th>
+                <th>Play Status</th>
+                <th>Update Values</th>
+                <th>Update PS</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for person in persons %}
+            <tr class="">
+                <td class="text-start">{{ person["name"] }}</td>
+                <td class="text-start">{{ person["hp"] }}</td>
+                <td class="text-start">{{ person["bounty"] }}</td>
+                <td class="text-start">{{ person["playing"] }}</td>
+                <td>
+                    <form action="/admin" method="post">
+                        <div class="mb-3">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="bounty" name="bounty" placeholder="Bounty" type="number" min="0">
+                        </div>
+                        <div class="mb-3">
+                            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="hp" name="hp" placeholder="HP" type="number" min="0">
+                        </div>
+                        <input name="updateid" type="hidden" value="{{ person["id"] }}">
+                        <button class="btn btn-primary" type="submit">Update</button>
+                    </form>
+                </td>
+                <td>    
+                    <form action="/admin" method="post">
+                        <input name="id" type="hidden" value="{{ person["id"] }}">
+                        <button type="submit">Not Playing</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/admin" method="post">
+                        <input name="idplay" type="hidden" value="{{ person["id"] }}">
+                        <button type="submit">Playing</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div>
+        You can't access this page you smooth-brained neanderthal
+    </div>
+    {% endif %}
+{% endblock %}
