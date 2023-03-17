@@ -347,8 +347,9 @@ def table2():
         dealer = request.form.get("id")
         if dealer:
             db.execute("UPDATE tables SET dealerid = ? WHERE id = 2", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 2")
             session["occupied2"] = True
-            session["dealerid2"] = dealer
+            session["dealerid2"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 2")
         persons = db.execute("SELECT * FROM users WHERE playing = 1")
@@ -378,8 +379,9 @@ def table3():
         dealer = request.form.get("id")
         if dealer:
             db.execute("UPDATE tables SET dealerid = ? WHERE id = 3", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 3")
             session["occupied3"] = True
-            session["dealerid3"] = dealer
+            session["dealerid3"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 3")
         persons = db.execute("SELECT * FROM users WHERE playing = 1")
@@ -409,8 +411,9 @@ def table4():
         dealer = request.form.get("id")
         if dealer:
             db.execute("UPDATE tables SET dealerid = ? WHERE id = 4", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 4")
             session["occupied4"] = True
-            session["dealerid4"] = dealer
+            session["dealerid4"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 4")
         persons = db.execute("SELECT * FROM users WHERE playing = 1")
@@ -440,8 +443,9 @@ def table5():
         dealer = request.form.get("id")
         if dealer:
             db.execute("UPDATE tables SET dealerid = ? WHERE id = 5", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 5")
             session["occupied5"] = True
-            session["dealerid5"] = dealer
+            session["dealerid5"] = row[0]["dealerid"]
     
         players = db.execute("SELECT * FROM users WHERE poker = 5")
         persons = db.execute("SELECT * FROM users WHERE playing = 1")
@@ -471,8 +475,9 @@ def table6():
         dealer = request.form.get("id")
         if dealer:
             db.execute("UPDATE tables SET dealerid = ? WHERE id = 6", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 6")
             session["occupied6"] = True
-            session["dealerid6"] = dealer
+            session["dealerid6"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 6")
         persons = db.execute("SELECT * FROM users WHERE playing = 1")
@@ -502,8 +507,9 @@ def table7():
         dealer = request.form.get("id")
         if dealer:
             db.execute("UPDATE tables SET dealerid = ? WHERE id = 7", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 7")
             session["occupied7"] = True
-            session["dealerid7"] = dealer
+            session["dealerid7"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 7")
         persons = db.execute("SELECT * FROM users WHERE playing = 1")
