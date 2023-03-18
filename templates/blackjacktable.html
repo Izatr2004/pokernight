@@ -56,25 +56,25 @@
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
                                 <input name="winner" type="hidden" value="{{ player["player"] }}">
-                                <button class="btn btn-primary btn-updated" type="submit" class="buttons">Win</button>
+                                <button type="submit" class="buttons">Win</button>
                             </form>             
                         </td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
                                 <input name="loser" type="hidden" value="{{ player["player"] }}">
-                                <button class="btn btn-primary btn-updated" type="submit" class="buttons">Lose</button>
+                                <button type="submit" class="buttons">Lose</button>
                             </form>             
                         </td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
                                 <input name="tie" type="hidden" value="{{ player["player"] }}">
-                                <button class="btn btn-primary btn-updated" type="submit" class="buttons">Tie</button>
+                                <button type="submit" class="buttons">Tie</button>
                             </form>             
                         </td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
                                 <input name="x2" type="hidden" value="{{ player["player"] }}">
-                                <button class="btn btn-primary btn-updated" type="submit" class="buttons">x2</button>
+                                <button type="submit" class="buttons">x2</button>
                             </form>             
                         </td>
                     </tr>
@@ -82,24 +82,24 @@
                 </tbody>
             </table>
             <div>
-                <button class="btn btn-primary btn-updated" id="myBtn">Add Players</button>
+                <button id="myBtn">Add Players</button>
             </div>
             <div>
                 <form action="/playingstatus" method="post">
                     <input name="playing" type="hidden" value="1">
-                    <button class="btn btn-primary btn-btn-updated">Begin</button>
+                    <button>Begin</button>
                 </form>
             </div>
             <div>
                 <form action="/playingstatus" method="post">
                     <input name="playing" type="hidden" value="0">
-                    <button class="btn btn-primary btn-btn-updated">Restart</button>
+                    <button>Restart</button>
                 </form>
             </div>
             <div>
                 <form action="/bjcheckout" method="post">
                     <input name="checkoutid" type="hidden" value="{{ session["dealerid8"] }}">
-                    <button class="btn btn-primary btn-updated" type="submit">Check Out</button>
+                    <button type="submit">Check Out</button>
                 </form>
             </div>
         </div>
