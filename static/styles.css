@@ -4,10 +4,21 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
+.small {
+  font-size: small;
+}
+
 .btn-updated {
   background-color:#53616C;
   border-color:#53616C;
   font-family: monospace;
+}
+
+.btn-start {
+  background-color:#FFD597;
+  border-color:#FFD597;
+  font-family: monospace;
+  margin: 20px;
 }
 
 .ui-dialog {
@@ -160,7 +171,7 @@ nav .navbar-brand
 
   .start {
     width: 200px;
-    height: 200px;
+    height: 300;
   }
 
   .money {

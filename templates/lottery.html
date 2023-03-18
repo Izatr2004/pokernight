@@ -1,11 +1,23 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Home
+    Lucky Draw
 {% endblock %}
 
 {% block main %}
-    page shows lottery prizepool 
+    Prize Showcase
+    {% if session["admin"] == 1 %}
+        <form action="/lottery" method="post">
+            <input type="hidden" value="1">
+            <button>Display Winner</button>
+        </form>
+    {% endif %}
+
+    {% if winner %}
+        <div>
+            The winner is {{ winner }}
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block footer %}
