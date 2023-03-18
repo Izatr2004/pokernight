@@ -368,7 +368,7 @@ def table2():
             session["dealerid2"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 2")
-        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
         
          # this part checks for elimination
         eliminated = request.form.get("eliminated")
@@ -400,7 +400,7 @@ def table3():
             session["dealerid3"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 3")
-        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
         
          # this part checks for elimination
         eliminated = request.form.get("eliminated")
@@ -432,7 +432,7 @@ def table4():
             session["dealerid4"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 4")
-        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
         
          # this part checks for elimination
         eliminated = request.form.get("eliminated")
@@ -464,7 +464,7 @@ def table5():
             session["dealerid5"] = row[0]["dealerid"]
     
         players = db.execute("SELECT * FROM users WHERE poker = 5")
-        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
         
          # this part checks for elimination
         eliminated = request.form.get("eliminated")
@@ -496,7 +496,7 @@ def table6():
             session["dealerid6"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 6")
-        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
         
          # this part checks for elimination
         eliminated = request.form.get("eliminated")
@@ -528,7 +528,7 @@ def table7():
             session["dealerid7"] = row[0]["dealerid"]
         
         players = db.execute("SELECT * FROM users WHERE poker = 7")
-        persons = db.execute("SELECT * FROM users WHERE playing = 1")
+        persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
         
          # this part checks for elimination
         eliminated = request.form.get("eliminated")

@@ -34,7 +34,7 @@
                 <div class="collapse navbar-collapse" id="navbar">
                     {% if session["admin"] == 1 %}
                         <ul class="navbar-nav me-auto mt-2 text-center navfont">
-                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
                             <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
@@ -48,7 +48,7 @@
                     
                     {% elif session["dealer"] == 1 %}
                     <ul class="navbar-nav me-auto mt-2 navfont">
-                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
                         <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                         <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
@@ -61,7 +61,7 @@
                     </ul>
                     {% elif session["playing"] == 1 %}
                         <ul class="navbar-nav me-auto mt-2 navfont">
-                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
                             <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
@@ -73,7 +73,7 @@
                         </ul>
                     {% elif session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2 navfont">
-                            <li class="nav-item "><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item "><a class="nav-link" href="/home">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="/rules">Game Rules</a></li>
                             <li class="nav-item"><a class="nav-link" href="/dealers">Meet The Dealers</a></li>
                             <li class="nav-item"><a class="nav-link" href="/players">Place Bounties</a></li>
