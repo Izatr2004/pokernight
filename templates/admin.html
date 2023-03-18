@@ -14,6 +14,7 @@
                 <th>Name</th>
                 <th>HP</th>
                 <th>Bounty</th>
+                <th>Lucky</th>
                 <th>Play Status</th>
                 <th>Update Values</th>
                 <th>Update PS</th>
@@ -25,6 +26,7 @@
                 <td class="text-start">{{ person["name"] }}</td>
                 <td class="text-start">{{ person["hp"] }}</td>
                 <td class="text-start">{{ person["bounty"] }}</td>
+                <td class="text-start">{{ person["lucky"] }}</td>
                 <td class="text-start">{{ person["playing"] }}</td>
                 <td>
                     <form action="/admin" method="post">
@@ -54,6 +56,13 @@
         {% endfor %}
         </tbody>
     </table>
+
+        {% if session["user_id"] == 1 or session["user_id"] == 2 %}
+        <form action="/admin" method="post">
+            <input name="convert" type="hidden" value="1">
+            <button type="submit">Convert All HP</button>
+        </form>
+        {% endif %}
     {% else %}
     <div>
         You can't access this page you smooth-brained neanderthal

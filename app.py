@@ -6,6 +6,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 from fractions import Fraction
+import random
 
 from helpers import login_required, has_int_and_upper
 
@@ -50,6 +51,7 @@ def admin():
         updateid = request.form.get("updateid")
         id = request.form.get("id")
         idplay = request.form.get("idplay")
+        convert = request.form.get("convert")
         
         if bounty:
             db.execute("UPDATE users SET bounty = ? WHERE id = ?", bounty, updateid)
@@ -62,6 +64,13 @@ def admin():
             
         if idplay:
             db.execute("UPDATE users SET playing = 1, hp = hp + 10 WHERE id = ?", idplay)   
+            
+        if convert:
+            users = db.execute("SELECT * FROM users")
+            for user in users:
+                bountyhp = user["bounty"] * 10
+                db.execute("UPDATE users SET  hp = hp + ?, bounty = bounty - ? WHERE id = ?", bountyhp, user["bounty"], user["id"])
+                db.execute("UPDATE users SET lucky = lucky + ?, hp = hp - ? WHERE id = ?", user["hp"], user["hp"], user["id"])
         
         persons = db.execute("SELECT * FROM users")
         
@@ -270,12 +279,21 @@ def leaderboard():
     session["hp"] = rows[0]["hp"]
     return render_template("leaderboard.html", players=players)
 
-@app.route("/lottery")
+@app.route("/lottery", methods=["GET", "POST"])
 @login_required
 def lottery():
-    persons = db.execute("SELECT * FROM users")
-    
-    
+    if request.method == "POST":
+        lst = []
+        persons = db.execute("SELECT * FROM users")
+        for person in persons:
+            luckys = int(person["lucky"])
+            for i in range(luckys):
+                lst.append(person["name"])
+        num = random.randrange(1, len(lst))
+        winner = lst[num]
+        return render_template("lottery.html", winner=winner)
+    else:
+        return render_template("lottery.html")
 
 @app.route("/tables", methods=["GET", "POST"])
 @login_required

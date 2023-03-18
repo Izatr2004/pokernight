@@ -4,6 +4,10 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
+.small {
+  font-size: small;
+}
+
 .btn-updated {
   background-color:#53616C;
   border-color:#53616C;
