@@ -288,6 +288,10 @@ def tables():
             return redirect("/table6")
         if tableid == 7:
             return redirect("/table7")
+        if tableid == 8:
+            return redirect("/blackjacktable")
+        if tableid == 9:
+            return redirect("/acetable")
         
         return redirect("/tables")
     else:
@@ -311,6 +315,8 @@ def mytable():
         return redirect("/table6")
     if session["dealerid7"] == session["user_id"]:
         return redirect("/table7")
+    if session["dealerid8"] == session["user_id"]:
+        return redirect("/blackjacktable")
     
     return redirect("/tables")
     
@@ -583,6 +589,123 @@ def checkout():
     tableid = db.execute("SELECT * FROM tables WHERE dealerid = ?", id)
     db.execute("UPDATE tables SET dealerid = 0 WHERE dealerid = ?", id)
     db.execute("UPDATE users SET poker = 0 WHERE tableid = ?", tableid[0]["id"])
+    session["dealerid" + str(tableid[0]["id"])] = None
+    session["occupied" + str(tableid[0]["id"])] = False
+    return redirect("/myTable")
+
+@app.route("/blackjack", methods=["GET", "POST"])
+@login_required
+def blackjack():
+    if request.method == "POST":
+        bet = request.form.get("bet")  
+        playingstatus = db.execute("SELECT * FROM blackjackstatus")
+        playing = playingstatus[0]["status"]
+        status = 0
+        users = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        if int(bet) <= users[0]["hp"]:
+            db.execute("UPDATE blackjack SET bet = ? WHERE player = ?", bet, session["user_id"])
+            session["blackjack"] = 2
+            return render_template("blackjack.html", status=status, playing=playing)
+        else:
+            status = 0
+            return render_template("blackjack.html", status=status, playing=playing)
+    else:
+        rows = db.execute("SELECT * FROM blackjack")
+        playingstatus = db.execute("SELECT * FROM blackjackstatus")
+        playing = playingstatus[0]["status"]
+        status = 0
+        for row in rows:
+            if row["player"] == session["user_id"]:
+                status = 1
+                return render_template("blackjack.html", status=status, playing=playing)
+        return render_template("blackjack.html", status=status, playing=playing)
+    
+@app.route("/blackjacktable", methods=["GET", "POST"])
+@login_required
+def blackjacktable():
+    if request.method == "POST":
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 8", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 8")
+            session["occupied8"] = True
+            session["dealerid8"] = row[0]["dealerid"]
+        
+        # players = db.execute("SELECT * FROM users WHERE poker = 8")
+        players = db.execute("SELECT * FROM blackjack")
+        persons = db.execute("SELECT * FROM users WHERE poker = 0")
+        
+        # this part checks for elimination
+        eliminated = request.form.get("eliminated")
+        if eliminated:
+            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        
+        return render_template("blackjacktable.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 8")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied8"] = True
+        session["dealerid8"] = dealer
+        players = db.execute("SELECT * FROM blackjack")
+        persons = db.execute("SELECT * FROM users WHERE poker = 0")
+        return render_template("blackjacktable.html", dealer=dealer, players=players, persons=persons)
+        
+@app.route("/addplayerbj", methods=["POST"])
+@login_required
+def addplayerbj():
+    id = request.form.get("addid")
+    users = db.execute("SELECT * FROM users WHERE id = ?", id)
+    db.execute("INSERT INTO blackjack (player, name) VALUES(?, ?)", id, users[0]["name"])
+    db.execute("UPDATE users SET poker = 8 WHERE id = ?", id)
+    db.execute("UPDATE users SET tableid = 8 WHERE id = ?", id)
+    return redirect("/myTable")
+
+@app.route("/bjlogic", methods=["POST"])
+@login_required
+def bjlogic():
+    winner = request.form.get("winner")
+    loser = request.form.get("loser")
+    tie = request.form.get("tie")
+    x2 = request.form.get("x2")
+    
+    betters = db.execute("SELECT * FROM blackjack")
+    if winner:
+        db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", betters[winner]["bet"], winner)
+        db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", winner)
+
+    if loser:
+        db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", betters[loser]["bet"], loser)
+        db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", loser)
+        
+    if tie:
+        db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", tie)
+    
+    if x2:
+        db.execute("UPDATE blackjack SET bet = bet * 2 WHERE id = ?", x2)
+        
+    return redirect("/myTable")
+        
+@app.route("/playingstatus", methods=["POST"])
+@login_required
+def playingstatus():
+    status = request.form.get("playing")
+    if status == 1:
+        db.execute("UPDATE blackjackstatus SET status = 1")
+        return redirect("/myTable")
+    else:
+        db.execute("UPDATE blackjackstatus SET status = 0")
+        return redirect("/myTable")
+    
+@app.route("/bjcheckout", methods=["POST"])
+@login_required 
+def bjcheckout():
+    id = request.form.get("checkoutid")
+    tableid = db.execute("SELECT * FROM tables WHERE dealerid = ?", id)
+    db.execute("UPDATE tables SET dealerid = 0 WHERE dealerid = ?", id)
+    db.execute("UPDATE users SET poker = 0 WHERE tableid = ?", tableid[0]["id"])
+    db.execute("UPDATE blackjackstatus SET status = 0")
+    db.execute("DELETE FROM blackjack")
     session["dealerid" + str(tableid[0]["id"])] = None
     session["occupied" + str(tableid[0]["id"])] = False
     return redirect("/myTable")
