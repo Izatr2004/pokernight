@@ -12,39 +12,39 @@
     {% endif %}
 
     {% if status == 1 and playing == 0 %}
-        <div>
+        <div class="middle">
         <image src="/static/diamonds.png" class="cards">
         <form action="/acerace" method="post">
             <input name="choice" type="hidden" value="1">
-            <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
-            <button>Bet</button>
+            <input class="form-control mx-auto w-auto middle1" id="bet" name="bet" placeholder="HP" type="number" min="1">
+            <button class="btn btn-primary btn-updated">Bet</button>
         </form>
         </div>
 
-        <div>
+        <div class="middle">
         <image src="/static/clubs.png" class="cards">
         <form action="/acerace" method="post">
             <input name="choice" type="hidden" value="2">
-            <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
-            <button>Bet</button>
+            <input class="form-control mx-auto w-auto middle1" id="bet" name="bet" placeholder="HP" type="number" min="1">
+            <button class="btn btn-primary btn-updated">Bet</button>
         </form>
         </div>
 
-        <div>
+        <div class="middle">
         <image src="/static/hearts.png" class="cards">
         <form action="/acerace" method="post">
             <input name="choice" type="hidden" value="3">
-            <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
-            <button>Bet</button>
+            <input class="form-control mx-auto w-auto middle1" id="bet" name="bet" placeholder="HP" type="number" min="1">
+            <button class="btn btn-primary btn-updated">Bet</button>
         </form>
         </div>
 
-        <div>
+        <div class="middle">
         <image src="/static/spades.png" class="cards">
         <form action="/acerace" method="post">
             <input name="choice" type="hidden" value="4">
-            <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
-            <button>Bet</button>
+            <input class="form-control mx-auto w-auto middle1" id="bet" name="bet" placeholder="HP" type="number" min="1">
+            <button class="btn btn-primary btn-updated">Bet</button>
         </form>
         </div>
     {% elif session["acerace"] == 2 %}

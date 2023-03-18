@@ -12,10 +12,15 @@
     {% endif %}
 
     {% if status == 1 and playing == 0 %}
+        <h1 class="header1">
+            Make Your Bets !
+        </h1>
+        <div class="middle py-6">
         <form action="/blackjack" method="post">
             <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
-            <button>Bet</button>
+            <button class="btn btn-primary btn-updated btn-updated2">Bet</button>
         </form>
+        </div>
     {% elif session["blackjack"] == 2 %}
         Goodluck !
     {% else %}
