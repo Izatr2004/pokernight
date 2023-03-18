@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block main %}
+    {% if session["dealer"] == 1 %}
         {% if session["occupied5"] == False or not session["occupied5"] %} 
             <div>
                 <form action="/table5" method="post">
@@ -70,7 +71,7 @@
             </div>
             <div>
                 <form action="/checkout" method="post">
-                    <input name="checkoutid" type="hidden" value="{{ session["user_id"] }}">
+                    <input name="checkoutid" type="hidden" value="{{ session["dealerid5"] }}">
                     <button type="submit">Check Out</button>
                 </form>
             </div>
@@ -111,4 +112,8 @@
         }
     </script>
 
+{% endblock %}
+
+{% block footer %}
+    <div id="value-container"><img class="img-fluid money" src="/static/money.png"> {{ session["hp"] }} </div>
 {% endblock %}
