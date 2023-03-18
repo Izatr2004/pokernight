@@ -177,9 +177,9 @@ def register():
         if len(name) < 4:
             return render_template("register.html", err5=True)
         
-        # # Ensure password format is right
-        # if len(passw) < 6 or not has_int_and_upper(passw):
-        #     return render_template("register.html", err6=True)
+        # Ensure password format is right
+        if len(passw) < 6 or not has_int_and_upper(passw):
+            return render_template("register.html", err6=True)
             
         # Insert username and password information into sql database
         db.execute("INSERT INTO users (name, hash) VALUES(?, ?)", request.form.get("username"), generate_password_hash(request.form.get("password")))
