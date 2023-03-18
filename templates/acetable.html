@@ -1,19 +1,19 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Ace Table
+    Ace Race Table
 {% endblock %}
 
 {% block main %}
     {% if session["dealer"] == 1 %}    
-        {% if session["occupied8"] == False or not session["occupied8"] %}
+        {% if session["occupied9"] == False or not session["occupied9"] %}
             <div>
-                <form action="/blackjacktable" method="post">
+                <form action="/acetable" method="post">
                     <input name="id" type="hidden" value="{{ session["user_id"] }}">
                     <button type="submit">Check In</button>
                 </form>
             </div>
-        {% elif session["dealerid8"] == session["user_id"] or session["admin"] == 1 %}
+        {% elif session["dealerid9"] == session["user_id"] or session["admin"] == 1 %}
             <div id="myModal" class="modal">
                 <div class="modal-content">
                     <span class="close">&times;</span>
@@ -28,7 +28,7 @@
                             <tr>
                                 <td class="text-start">{{ person["name"] }}</td>
                                 <td>    
-                                    <form action="/addplayerbj" method="post">
+                                    <form action="/addplayerar" method="post">
                                         <input name="addid" type="hidden" value="{{ person["id"] }}">
                                         <button type="submit">Add</button>
                                     </form>
@@ -46,59 +46,62 @@
                     <tr>
                         <th>Name</th>
                         <th>Bet</th>
+                        <th>Choice</th>
+                        <th>Remove Player</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for player in players %}
+                {% for play in players %}
                     <tr class="">
-                        <td class="text-start">{{ player["name"] }}</td>
-                        <td>{{ player["bet"] }}</td>
-                        <td>    
-                            <form id="winner" action="/bjlogic" method="post">
-                                <input name="winner" type="hidden" value="{{ player["player"] }}">
-                                <button type="submit" class="buttons">Win</button>
-                            </form>             
-                        </td>
-                        <td>    
-                            <form id="winner" action="/bjlogic" method="post">
-                                <input name="loser" type="hidden" value="{{ player["player"] }}">
-                                <button type="submit" class="buttons">Lose</button>
-                            </form>             
-                        </td>
-                        <td>    
-                            <form id="winner" action="/bjlogic" method="post">
-                                <input name="tie" type="hidden" value="{{ player["player"] }}">
-                                <button type="submit" class="buttons">Tie</button>
-                            </form>             
-                        </td>
-                        <td>    
-                            <form id="winner" action="/bjlogic" method="post">
-                                <input name="x2" type="hidden" value="{{ player["player"] }}">
-                                <button type="submit" class="buttons">x2</button>
-                            </form>             
-                        </td>
+                        <td class="text-start">{{ play["name"] }}</td>
+                        <td>{{ play["bet"] }}</td> 
+                        <td>{{ play["choice"] }}</td>   
+                        <td>
+                            <form id="remove" action="/arlogic" method="post">
+                                <input name="removeid" type="hidden" value="{{ play["player"] }}">
+                                <button type="submit" class="buttons">-</button>
+                            </form> 
+                        </td>     
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
             <div>
-                <button class="btn btn-primary" id="myBtn">Add Players</button>
+                <form id="winner" action="/arlogic" method="post">
+                    <input name="diamond" type="hidden" value="1">
+                    <button type="submit" class="buttons">Diamond Wins</button>
+                </form>             
+                <form id="winner" action="/arlogic" method="post">
+                    <input name="club" type="hidden" value="2">
+                    <button type="submit" class="buttons">Club Wins</button>
+                </form>            
+                <form id="winner" action="/arlogic" method="post">
+                    <input name="heart" type="hidden" value="3">
+                    <button type="submit" class="buttons">Heart Wins</button>
+                </form>  
+                <form id="winner" action="/arlogic" method="post">
+                    <input name="spade" type="hidden" value="4">
+                    <button type="submit" class="buttons">Spade Wins</button>
+                </form>     
             </div>
             <div>
-                <form action="/playingstatus" method="post">
+                <button id="myBtn">Add Players</button>
+            </div>
+            <div>
+                <form action="/playingstatusar" method="post">
                     <input name="playing" type="hidden" value="1">
-                    <button class="btn btn-primary btn-btn-updated">Begin</button>
+                    <button>Begin</button>
                 </form>
             </div>
             <div>
-                <form action="/playingstatus" method="post">
+                <form action="/playingstatusar" method="post">
                     <input name="playing" type="hidden" value="0">
-                    <button class="btn btn-primary btn-btn-updated">Restart</button>
+                    <button>Restart</button>
                 </form>
             </div>
             <div>
-                <form action="/checkout" method="post">
-                    <input name="checkoutid" type="hidden" value="{{ session["dealerid8"] }}">
+                <form action="/archeckout" method="post">
+                    <input name="checkoutid" type="hidden" value="{{ session["dealerid9"] }}">
                     <button type="submit">Check Out</button>
                 </form>
             </div>

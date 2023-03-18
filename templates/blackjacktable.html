@@ -49,32 +49,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for player in players %}
+                {% for play in players %}
                     <tr class="">
-                        <td class="text-start">{{ player["name"] }}</td>
-                        <td>{{ player["bet"] }}</td>
+                        <td class="text-start">{{ play["name"] }}</td>
+                        <td>{{ play["bet"] }}</td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
-                                <input name="winner" type="hidden" value="{{ player["player"] }}">
+                                <input name="winner" type="hidden" value="{{ play["player"] }}">
                                 <button type="submit" class="buttons">Win</button>
                             </form>             
                         </td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
-                                <input name="loser" type="hidden" value="{{ player["player"] }}">
+                                <input name="loser" type="hidden" value="{{ play["player"] }}">
                                 <button type="submit" class="buttons">Lose</button>
                             </form>             
                         </td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
-                                <input name="tie" type="hidden" value="{{ player["player"] }}">
+                                <input name="tie" type="hidden" value="{{ play["player"] }}">
                                 <button type="submit" class="buttons">Tie</button>
                             </form>             
                         </td>
                         <td>    
                             <form id="winner" action="/bjlogic" method="post">
-                                <input name="x2" type="hidden" value="{{ player["player"] }}">
+                                <input name="x2" type="hidden" value="{{ play["player"] }}">
                                 <button type="submit" class="buttons">x2</button>
+                            </form>             
+                        </td>
+                        <td>    
+                            <form id="remove" action="/bjlogic" method="post">
+                                <input name="removeid" type="hidden" value="{{ play["player"] }}">
+                                <button type="submit" class="buttons">-</button>
                             </form>             
                         </td>
                     </tr>

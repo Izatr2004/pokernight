@@ -226,6 +226,8 @@ def dealers():
 
         return jsonify({'success': True, 'hp': hp})
     else:
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
         return render_template("dealers.html")
 
 @app.route("/players", methods=["GET", "POST"])
@@ -254,6 +256,8 @@ def players():
     else:
         players = db.execute("SELECT * FROM users ORDER BY hp")
         # add OFFSET int for skipping first few users^
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
         
         return render_template("players.html", players=players)
 
@@ -262,12 +266,15 @@ def players():
 def leaderboard():
     players = db.execute("SELECT * FROM users ORDER BY bounty ")
         # add OFFSET int for skipping first few users^
+    rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+    session["hp"] = rows[0]["hp"]
     return render_template("leaderboard.html", players=players)
 
 @app.route("/lottery")
 @login_required
 def lottery():
     persons = db.execute("SELECT * FROM users")
+    
     
 
 @app.route("/tables", methods=["GET", "POST"])
@@ -318,6 +325,8 @@ def mytable():
         return redirect("/table7")
     if session["dealerid8"] == session["user_id"]:
         return redirect("/blackjacktable")
+    if session["dealerid9"] == session["user_id"]:
+        return redirect("/acetable")
     
     return redirect("/tables")
     
@@ -359,6 +368,10 @@ def table1():
         session["dealerid1"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 1")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table1.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table2", methods=["GET", "POST"])
@@ -391,6 +404,10 @@ def table2():
         session["dealerid2"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 2")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table2.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table3", methods=["GET", "POST"])
@@ -423,6 +440,10 @@ def table3():
         session["dealerid3"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 3")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table3.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table4", methods=["GET", "POST"])
@@ -455,6 +476,10 @@ def table4():
         session["dealerid4"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 4")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table4.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table5", methods=["GET", "POST"])
@@ -487,6 +512,10 @@ def table5():
         session["dealerid5"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 5")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table5.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table6", methods=["GET", "POST"])
@@ -519,6 +548,10 @@ def table6():
         session["dealerid6"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 6")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table6.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/table7", methods=["GET", "POST"])
@@ -551,6 +584,10 @@ def table7():
         session["dealerid7"] = dealer
         players = db.execute("SELECT * FROM users WHERE poker = 7")
         persons = db.execute("SELECT * FROM users WHERE playing = 1 AND poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
         return render_template("table7.html", dealer=dealer, players=players, persons=persons)
 
 @app.route("/eliminate", methods=["POST"])
@@ -620,6 +657,10 @@ def blackjack():
         playingstatus = db.execute("SELECT * FROM blackjackstatus")
         playing = playingstatus[0]["status"]
         status = 0
+        
+        ro = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = ro[0]["hp"]
+        
         for row in rows:
             if row["player"] == session["user_id"]:
                 status = 1
@@ -641,10 +682,8 @@ def blackjacktable():
         players = db.execute("SELECT * FROM blackjack")
         persons = db.execute("SELECT * FROM users WHERE poker = 0")
         
-        # this part checks for elimination
-        eliminated = request.form.get("eliminated")
-        if eliminated:
-            return render_template("eliminate.html", players=players, eliminated=eliminated)
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
         
         return render_template("blackjacktable.html", dealer=dealer, players=players, persons=persons)
     else:
@@ -655,6 +694,10 @@ def blackjacktable():
         session["dealerid8"] = dealer
         players = db.execute("SELECT * FROM blackjack")
         persons = db.execute("SELECT * FROM users WHERE poker = 0")
+        
+        row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = row[0]["hp"]
+        
         return render_template("blackjacktable.html", dealer=dealer, players=players, persons=persons)
         
 @app.route("/addplayerbj", methods=["POST"])
@@ -674,34 +717,53 @@ def bjlogic():
     loser = request.form.get("loser")
     tie = request.form.get("tie")
     x2 = request.form.get("x2")
+    removeid = request.form.get("removeid")
     
-    betters = db.execute("SELECT * FROM blackjack")
+    better = db.execute("SELECT * FROM blackjack WHERE player = ?", winner)
+    if better:
+        i = better[0]["bet"]
     if winner:
-        db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", betters[winner]["bet"], winner)
+        db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", i, winner)
         db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", winner)
+        return redirect("/blackjacktable")
 
+    better = db.execute("SELECT * FROM blackjack WHERE player = ?", loser)
+    if better:
+        i = better[0]["bet"]
     if loser:
-        db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", betters[loser]["bet"], loser)
-        db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", loser)
-        
+        db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", i, loser)
+        db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", loser) 
+        return redirect("/blackjacktable")
+    
     if tie:
         db.execute("UPDATE blackjack SET bet = 0 WHERE player = ?", tie)
+        return redirect("/blackjacktable")
     
     if x2:
+        bet = db.execute("SELECT * FROM blackjack WHERE player = ?", x2)
+        row = db.execute("SELECT * FROM users WHERE id = ?", x2)
+        if int(bet[0]["bet"]) * 2 > int(row[0]["hp"]):
+            return redirect("/blackjacktable")
         db.execute("UPDATE blackjack SET bet = bet * 2 WHERE id = ?", x2)
+        
+    if removeid:
+        db.execute("DELETE FROM blackjack WHERE player = ?", removeid)
+        db.execute("UPDATE users SET poker = 0 WHERE id = ?", removeid)
+        db.execute("UPDATE users SET tableid = 0 WHERE id = ?", removeid)
+        return redirect("/blackjacktable")
         
     return redirect("/blackjacktable")
         
 @app.route("/playingstatus", methods=["POST"])
 @login_required
 def playingstatus():
-    status = request.form.get("playing")
+    status = int(request.form.get("playing"))
     if status == 1:
         db.execute("UPDATE blackjackstatus SET status = 1")
-        return redirect("/myTable")
+        return redirect("/blackjacktable")
     else:
         db.execute("UPDATE blackjackstatus SET status = 0")
-        return redirect("/myTable")
+        return redirect("/blackjacktable")
     
 @app.route("/bjcheckout", methods=["POST"])
 @login_required 
@@ -710,8 +772,204 @@ def bjcheckout():
     tableid = db.execute("SELECT * FROM tables WHERE dealerid = ?", id)
     db.execute("UPDATE tables SET dealerid = 0 WHERE dealerid = ?", id)
     db.execute("UPDATE users SET poker = 0 WHERE tableid = ?", tableid[0]["id"])
+    db.execute("UPDATE users SET tableid = 0 WHERE tableid = ?", tableid[0]["id"])
     db.execute("UPDATE blackjackstatus SET status = 0")
     db.execute("DELETE FROM blackjack")
     session["dealerid" + str(tableid[0]["id"])] = None
     session["occupied" + str(tableid[0]["id"])] = False
     return redirect("/myTable")
+
+@app.route("/acerace", methods=["GET", "POST"])
+@login_required 
+def acerace():
+    if request.method == "POST":
+        choice = request.form.get("choice")
+        bet = request.form.get("bet")
+        error = 0
+        if not bet or isinstance(bet, Fraction) or not bet.isdigit() or not float(bet).is_integer() or float(bet) < 1:  
+            error = 1
+            return render_template("acerace.html", status=status, playing=playing, error=error)
+        playingstatus = db.execute("SELECT * FROM arstatus")
+        playing = playingstatus[0]["status"]
+        status = 0
+        users = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        if int(bet) <= users[0]["hp"]:
+            db.execute("UPDATE acerace SET bet = ? WHERE player = ?", bet, session["user_id"])
+            db.execute("UPDATE acerace SET choice = ? WHERE player = ?", choice, session["user_id"])
+            session["acerace"] = 2
+            return render_template("acerace.html", status=status, playing=playing, error=error)
+        else:
+            status = 0
+            return render_template("acerace.html", status=status, playing=playing, error=error)
+    else:
+        rows = db.execute("SELECT * FROM acerace")
+        error = 0
+        playingstatus = db.execute("SELECT * FROM arstatus")
+        playing = playingstatus[0]["status"]
+        status = 0
+        
+        ro = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = ro[0]["hp"]
+        
+        for row in rows:
+            if row["player"] == session["user_id"]:
+                status = 1
+                return render_template("acerace.html", status=status, playing=playing, error=error)
+        return render_template("acerace.html", status=status, playing=playing, error=error)
+    
+@app.route("/addplayerar", methods=["POST"])
+@login_required 
+def addplayerar():
+    id = request.form.get("addid")
+    users = db.execute("SELECT * FROM users WHERE id = ?", id)
+    db.execute("INSERT INTO acerace (player, name) VALUES(?, ?)", id, users[0]["name"])
+    db.execute("UPDATE users SET poker = 9 WHERE id = ?", id)
+    db.execute("UPDATE users SET tableid = 9 WHERE id = ?", id)
+    return redirect("/acetable")
+
+@app.route("/arlogic", methods=["POST"])
+@login_required 
+def arlogic():
+    diamond = request.form.get("diamond")
+    club = request.form.get("club")
+    heart = request.form.get("heart")
+    spade = request.form.get("spade")
+    removeid = request.form.get("removeid")
+    
+    if diamond:
+        rows = db.execute("SELECT * FROM acerace")
+        for row in rows:
+            if int(row["choice"]) == int(diamond):
+                better = db.execute("SELECT * FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+            else:
+                better = db.execute("SELECT * FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                    db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", i, row["player"])
+                    db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+        return redirect("/acetable")
+    
+    if club:
+        rows = db.execute("SELECT * FROM acerace")
+        for row in rows:
+            if int(row["choice"]) == int(club):
+                better = db.execute("SELECT bet FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+            else:
+                better = db.execute("SELECT bet FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+        return redirect("/acetable")
+            
+    if heart:
+        rows = db.execute("SELECT * FROM acerace")
+        for row in rows:
+            if int(row["choice"]) == int(heart):
+                better = db.execute("SELECT bet FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+            else:
+                better = db.execute("SELECT bet FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+        return redirect("/acetable")
+    
+    if spade:
+        rows = db.execute("SELECT * FROM acerace")
+        for row in rows:
+            if int(row["choice"]) == int(spade):
+                better = db.execute("SELECT bet FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp + ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+            else:
+                better = db.execute("SELECT bet FROM acerace WHERE player = ?", row["player"])
+                if better:
+                    i = better[0]["bet"]
+                db.execute("UPDATE users SET hp = hp - ? WHERE id = ?", i, row["player"])
+                db.execute("UPDATE acerace SET bet = 0, choice = 0 WHERE player = ?", row["player"])
+        return redirect("/acetable")
+    
+    if removeid:
+        db.execute("DELETE FROM acerace WHERE player = ?", removeid)
+        db.execute("UPDATE users SET poker = 0 WHERE id = ?", removeid)
+        db.execute("UPDATE users SET tableid = 0 WHERE id = ?", removeid)
+        return redirect("/acetable")
+    return redirect("/acetable")
+
+@app.route("/acetable", methods=["GET", "POST"])
+@login_required 
+def acetable():
+    if request.method == "POST":
+        dealer = request.form.get("id")
+        if dealer:
+            db.execute("UPDATE tables SET dealerid = ? WHERE id = 9", dealer)
+            row = db.execute("SELECT * FROM tables WHERE id = 9")
+            session["occupied9"] = True
+            session["dealerid9"] = row[0]["dealerid"]
+        
+        # players = db.execute("SELECT * FROM users WHERE poker = 9")
+        players = db.execute("SELECT * FROM acerace")
+        persons = db.execute("SELECT * FROM users WHERE poker = 0")
+        
+        rows = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = rows[0]["hp"]
+        
+        return render_template("acetable.html", dealer=dealer, players=players, persons=persons)
+    else:
+        rows = db.execute("SELECT * FROM tables WHERE id = 9")
+        dealer = rows[0]["dealerid"]
+        if dealer == session["user_id"]:
+            session["occupied9"] = True
+        session["dealerid9"] = dealer
+        players = db.execute("SELECT * FROM acerace")
+        persons = db.execute("SELECT * FROM users WHERE poker = 0")
+        
+        row = db.execute("SELECT * FROM users WHERE id = ?", session["user_id"])
+        session["hp"] = row[0]["hp"]
+        
+        return render_template("acetable.html", dealer=dealer, players=players, persons=persons)
+
+@app.route("/archeckout", methods=["POST"])
+@login_required 
+def archeckout():
+    id = request.form.get("checkoutid")
+    tableid = db.execute("SELECT * FROM tables WHERE dealerid = ?", id)
+    db.execute("UPDATE tables SET dealerid = 0 WHERE dealerid = ?", id)
+    db.execute("UPDATE users SET poker = 0 WHERE tableid = ?", tableid[0]["id"])
+    db.execute("UPDATE users SET tableid = 0 WHERE tableid = ?", tableid[0]["id"])
+    db.execute("UPDATE arstatus SET status = 0")
+    db.execute("DELETE FROM acerace")
+    session["dealerid" + str(tableid[0]["id"])] = None
+    session["occupied" + str(tableid[0]["id"])] = False
+    return redirect("/myTable")
+
+@app.route("/playingstatusar", methods=["POST"])
+@login_required 
+def playingstatusar():
+    status = int(request.form.get("playing"))
+    if status == 1:
+        db.execute("UPDATE arstatus SET status = 1")
+        return redirect("/acetable")
+    else:
+        db.execute("UPDATE arstatus SET status = 0")
+        return redirect("/acetable")
+
+
+    
+
+    
