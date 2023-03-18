@@ -232,11 +232,10 @@ nav .navbar-brand
   .middle1 {
     margin: 5px;
     margin-bottom: 10px;
+    width: 75px;
+
   }
 
-  .w-auto {
-    width: 75px!important;
-  } 
 /* for interactivity */
   /* @media screen and (min-width: 80rem) {
     .container {
