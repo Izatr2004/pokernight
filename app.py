@@ -5,6 +5,7 @@ from flask import Flask, flash, redirect, render_template, request, session, jso
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+from fractions import Fraction
 
 from helpers import login_required, has_int_and_upper
 
@@ -597,7 +598,11 @@ def checkout():
 @login_required
 def blackjack():
     if request.method == "POST":
-        bet = request.form.get("bet")  
+        bet = request.form.get("bet")
+        error = 0
+        if not bet or isinstance(bet, Fraction) or not bet.isdigit() or not float(bet).is_integer() or float(bet) < 1:  
+            error = 1
+            return render_template("blackjack.html", status=status, playing=playing, error=error)
         playingstatus = db.execute("SELECT * FROM blackjackstatus")
         playing = playingstatus[0]["status"]
         status = 0
@@ -605,20 +610,21 @@ def blackjack():
         if int(bet) <= users[0]["hp"]:
             db.execute("UPDATE blackjack SET bet = ? WHERE player = ?", bet, session["user_id"])
             session["blackjack"] = 2
-            return render_template("blackjack.html", status=status, playing=playing)
+            return render_template("blackjack.html", status=status, playing=playing, error=error)
         else:
             status = 0
-            return render_template("blackjack.html", status=status, playing=playing)
+            return render_template("blackjack.html", status=status, playing=playing, error=error)
     else:
         rows = db.execute("SELECT * FROM blackjack")
+        error = 0
         playingstatus = db.execute("SELECT * FROM blackjackstatus")
         playing = playingstatus[0]["status"]
         status = 0
         for row in rows:
             if row["player"] == session["user_id"]:
                 status = 1
-                return render_template("blackjack.html", status=status, playing=playing)
-        return render_template("blackjack.html", status=status, playing=playing)
+                return render_template("blackjack.html", status=status, playing=playing, error=error)
+        return render_template("blackjack.html", status=status, playing=playing, error=error)
     
 @app.route("/blackjacktable", methods=["GET", "POST"])
 @login_required
@@ -659,7 +665,7 @@ def addplayerbj():
     db.execute("INSERT INTO blackjack (player, name) VALUES(?, ?)", id, users[0]["name"])
     db.execute("UPDATE users SET poker = 8 WHERE id = ?", id)
     db.execute("UPDATE users SET tableid = 8 WHERE id = ?", id)
-    return redirect("/myTable")
+    return redirect("/blackjacktable")
 
 @app.route("/bjlogic", methods=["POST"])
 @login_required
@@ -684,7 +690,7 @@ def bjlogic():
     if x2:
         db.execute("UPDATE blackjack SET bet = bet * 2 WHERE id = ?", x2)
         
-    return redirect("/myTable")
+    return redirect("/blackjacktable")
         
 @app.route("/playingstatus", methods=["POST"])
 @login_required

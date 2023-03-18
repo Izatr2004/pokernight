@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block main %}
+    {% if error == 1 %}
+        <div>
+            Please input a number, no decimal points !
+        </div>
+    {% endif %}
+
     {% if status == 1 and playing == 0 %}
         <form action="/blackjack" method="post">
             <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
@@ -15,6 +21,8 @@
     {% else %}
         You can't access this page !
     {% endif %}
+
+
 {% endblock %}
 
 {% block footer %}
