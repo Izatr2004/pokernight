@@ -236,6 +236,19 @@ nav .navbar-brand
 
   }
 
+  .homeText {
+    color: #924848;
+    font-family: Poppins;
+    text-shadow: 0 0 black;
+    border-radius: 30px;
+    font-size: 20px;
+    margin: 10px;
+  }
+
+  .lol {
+    padding: 40px;
+  }
+
 /* for interactivity */
   /* @media screen and (min-width: 80rem) {
     .container {
