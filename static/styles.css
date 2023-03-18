@@ -152,6 +152,12 @@ nav .navbar-brand
     height: 60px;
   }
 
+  .cards {
+    x: 10;
+    width: 60px;
+    height: 60px;
+  }
+
   .start {
     width: 200px;
     height: 200px;

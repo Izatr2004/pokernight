@@ -10,12 +10,16 @@
     {% for table in tables %}
         <tr>
             <form action="/tables" method="post">
-                {% if table["id"] != 8 %}
-                <td class="text-start col-md-6">Table {{ table["id"] }}</td>
+                {% if table["id"] == 9  %}
+                <td class="text-start col-md-6">Ace Race Table</td>
+                <td><input name="tableid" type="hidden" value="{{ table["id"] }}">
+                <button class="btn btn-primary btn-update" type="submit">Enter</button></td>
+                {% elif table["id"] == 8 %}
+                <td class="text-start col-md-6">Black Jack Table</td>
                 <td><input name="tableid" type="hidden" value="{{ table["id"] }}">
                 <button class="btn btn-primary btn-update" type="submit">Enter</button></td>
                 {% else %}
-                <td class="text-start col-md-6">Black Jack Table</td>
+                <td class="text-start col-md-6">Table {{ table["id"] }}</td>
                 <td><input name="tableid" type="hidden" value="{{ table["id"] }}">
                 <button class="btn btn-primary btn-update" type="submit">Enter</button></td>
                 {% endif %}
