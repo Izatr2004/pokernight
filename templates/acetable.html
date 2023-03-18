@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Ace Table
+{% endblock %}
+
+{% block main %}
+    {% if session["dealer"] == 1 %}    
+        {% if session["occupied8"] == False or not session["occupied8"] %}
+            <div>
+                <form action="/blackjacktable" method="post">
+                    <input name="id" type="hidden" value="{{ session["user_id"] }}">
+                    <button type="submit">Check In</button>
+                </form>
+            </div>
+        {% elif session["dealerid8"] == session["user_id"] or session["admin"] == 1 %}
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody> 
+                        {% for person in persons %}
+                            <tr>
+                                <td class="text-start">{{ person["name"] }}</td>
+                                <td>    
+                                    <form action="/addplayerbj" method="post">
+                                        <input name="addid" type="hidden" value="{{ person["id"] }}">
+                                        <button type="submit">Add</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="mainPage">
+            <h1>Players</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Bet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for player in players %}
+                    <tr class="">
+                        <td class="text-start">{{ player["name"] }}</td>
+                        <td>{{ player["bet"] }}</td>
+                        <td>    
+                            <form id="winner" action="/bjlogic" method="post">
+                                <input name="winner" type="hidden" value="{{ player["player"] }}">
+                                <button type="submit" class="buttons">Win</button>
+                            </form>             
+                        </td>
+                        <td>    
+                            <form id="winner" action="/bjlogic" method="post">
+                                <input name="loser" type="hidden" value="{{ player["player"] }}">
+                                <button type="submit" class="buttons">Lose</button>
+                            </form>             
+                        </td>
+                        <td>    
+                            <form id="winner" action="/bjlogic" method="post">
+                                <input name="tie" type="hidden" value="{{ player["player"] }}">
+                                <button type="submit" class="buttons">Tie</button>
+                            </form>             
+                        </td>
+                        <td>    
+                            <form id="winner" action="/bjlogic" method="post">
+                                <input name="x2" type="hidden" value="{{ player["player"] }}">
+                                <button type="submit" class="buttons">x2</button>
+                            </form>             
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <button class="btn btn-primary" id="myBtn">Add Players</button>
+            </div>
+            <div>
+                <form action="/playingstatus" method="post">
+                    <input name="playing" type="hidden" value="1">
+                    <button class="btn btn-primary btn-btn-updated">Begin</button>
+                </form>
+            </div>
+            <div>
+                <form action="/playingstatus" method="post">
+                    <input name="playing" type="hidden" value="0">
+                    <button class="btn btn-primary btn-btn-updated">Restart</button>
+                </form>
+            </div>
+            <div>
+                <form action="/checkout" method="post">
+                    <input name="checkoutid" type="hidden" value="{{ session["dealerid8"] }}">
+                    <button type="submit">Check Out</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+            <div>
+                You aren't authorized to access this page !
+            </div>
+        {% endif %}
+    {% endif %}
+          
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+        modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+        modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+        }
+    </script>
+
+{% endblock %}
+
+{% block footer %}
+    <div id="value-container"><img class="img-fluid money" src="/static/money.png"> {{ session["hp"] }} </div>
+{% endblock %}
+  

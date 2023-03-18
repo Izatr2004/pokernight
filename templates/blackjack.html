@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Black Jack
+{% endblock %}
+
+{% block main %}
+    {% if status == 1 and playing == 0 %}
+        <form action="/blackjack" method="post">
+            <input class="form-control mx-auto w-auto" id="bet" name="bet" placeholder="HP" type="number" min="1">
+            <button>Bet</button>
+        </form>
+    {% elif session["blackjack"] == 2 %}
+        Goodluck !
+    {% else %}
+        You can't access this page !
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <div id="value-container"><img class="img-fluid money" src="/static/money.png"> {{ session["hp"] }} </div>
+{% endblock %}
