@@ -167,6 +167,7 @@ nav .navbar-brand
     x: 10;
     width: 60px;
     height: 60px;
+    margin: 5px;
   }
 
   .start {
@@ -206,7 +207,36 @@ nav .navbar-brand
     text-align: center;
     padding-bottom: 20px;
   }
-  
+
+  .header {
+    font-family: Orelega One;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 44px;
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  .py-6 {
+    padding-top: 5rem!important;
+  }
+
+  .btn-updated2 {
+    margin-top: 10px;
+  }
+
+  .middle {
+    padding: 5px;
+  }
+
+  .middle1 {
+    margin: 5px;
+    margin-bottom: 10px;
+  }
+
+  .w-auto {
+    width: 75px!important;
+  } 
 /* for interactivity */
   /* @media screen and (min-width: 80rem) {
     .container {
